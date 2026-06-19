@@ -1,0 +1,33 @@
+name: Spotify genre autocollector
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install spotipy requests
+
+      - name: Correr el script
+        env:
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          SPOTIFY_REFRESH_TOKEN: ${{ secrets.SPOTIFY_REFRESH_TOKEN }}
+        run: python spotify_genre_autocollector.py
+
+      - name: Guardar procesados.json
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add procesados.json
+          git diff --staged --quiet || git commit -m "actualizar procesados"
+          git push
