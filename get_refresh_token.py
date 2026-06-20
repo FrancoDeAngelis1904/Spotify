@@ -22,7 +22,7 @@ SCOPE = "playlist-modify-public playlist-modify-private"
 auth_manager = SpotifyOAuth(
     client_id=os.environ["SPOTIFY_CLIENT_ID"],
     client_secret=os.environ["SPOTIFY_CLIENT_SECRET"],
-    redirect_uri="http://localhost:8888/callback",
+    redirect_uri="http://127.0.0.1:8888/callback",
     scope=SCOPE,
 )
 
